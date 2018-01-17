@@ -180,10 +180,12 @@ class StatusModule extends ReactContextBaseJavaModule implements LifecycleEventL
             JSONObject customConfig = new JSONObject(defaultConfig);
             JSONObject jsonConfig = new JSONObject(config);
             String gethLogFileName = "geth.log";
+            String dataDir = root + customConfig.get("DataDir");
+            String gethLogFilePath = dataDir + "/" + gethLogFileName;
             jsonConfig.put("LogEnabled", !TextUtils.isEmpty(this.logLevel));
-            jsonConfig.put("LogFile", gethLogFileName);
+            jsonConfig.put("LogFile", gethLogFilePath);
             jsonConfig.put("LogLevel", TextUtils.isEmpty(this.logLevel) ? "ERROR" : this.logLevel.toUpperCase());
-            jsonConfig.put("DataDir", root + customConfig.get("DataDir"));
+            jsonConfig.put("DataDir", dataDir);
             jsonConfig.put("NetworkId", customConfig.get("NetworkId"));
             try {
                 Object upstreamConfig = customConfig.get("UpstreamConfig");
@@ -195,8 +197,7 @@ class StatusModule extends ReactContextBaseJavaModule implements LifecycleEventL
 
             }
             jsonConfig.put("KeyStoreDir", newKeystoreDir);
-            String gethLogPath = dataFolder + "/" + gethLogFileName;
-            File logFile = new File(gethLogPath);
+            File logFile = new File(gethLogFilePath);
             try {
                 logFile.setReadable(true);
                 File parent = logFile.getParentFile();
